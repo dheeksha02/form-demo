@@ -1,0 +1,87 @@
+/* You can add global styles to this file, and also import other style files */
+@import "bootstrap/scss/bootstrap.scss";
+@import "bootstrap-icons/font/bootstrap-icons.scss";
+
+// @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+// @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+// @import url("//fonts.googleapis.com/earlyaccess/notosanstc.css");
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "bootstrap/scss/bootstrap.scss";
+@import "bootstrap-icons/font/bootstrap-icons.scss";
+
+@import '@fortawesome/fontawesome-free/scss/fontawesome';
+@import '@fortawesome/fontawesome-free/scss/regular';
+@import '@fortawesome/fontawesome-free/scss/solid';
+@import '@fortawesome/fontawesome-free/scss/brands';
+@import "variables";
+
+.btn  {
+    font-size: .8125rem!important;
+    //background-color: $brand-color;
+    font-weight: 500;
+    &.formcomponent {
+       i {
+        // color: red !important;
+        margin-right: 5px;
+        padding: 5px 5px 5px 5px;
+        border: 1px solid #E9CF97;
+        border-radius: 3px;
+        background-color: #FFF3C8;
+       }
+    }
+}
+
+span.btn.btn-primary {
+    color: #22252b;
+    //font-size: .875rem!important;
+    font-size: 13px !important;
+    background-color: #fff;
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: -1px;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: initial;
+    border-bottom: none;
+    border-right: none;
+    border-left: none;
+    &:active {
+      background-color: #fff !important;
+      color: #22252b !important;
+      border: 1px solid rgba(0,0,0,.125);
+    }
+}
+
+.formarea {
+	margin-top: 110px;
+	//padding-right: 0px;
+	padding-left: 0px;
+	@media screen and (min-width: 768px) 
+	and (max-device-width: 1024px) {
+			& {
+					margin-top: 163px;
+			}
+	} 
+}
+
+
+
+.builder-sidebar_search { 
+  display: none;
+}
+
+.formbuilder {
+	.formcomponents {
+		padding-right: 0px;    
+	}
+}
+
+.cdk-overlay-dark-backdrop {
+  background: none !important;
+  right: 0 !important;
+  position: unset;
+}
+
+.mat-dialog-container {
+  padding: 0px !important;
+}

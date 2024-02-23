@@ -1,0 +1,37 @@
+<canvas #canvas (click)="esignatureBlock = true; authService.esignaturePanel = true" height="39"
+class="signature-pad-canvas" width="308" id="canvas"></canvas>
+<dialog #dialog>
+  <mat-tab-group (selectedTabChange)="onTabChange($event)">
+    <mat-tab label="Type">
+      <div class="typeSignatureSec">
+          <input type="text" [(ngModel)]="signatureTypeTxt">
+      </div>
+    </mat-tab>
+    <mat-tab label="Draw">
+      <div class="drawSignatureSec">
+        <ng-signature-pad
+          doneButtonText="Show Image"
+          format="base64"
+          (done)="showImage($event)">
+        </ng-signature-pad>
+        <img [src]="signatureTypeImg" *ngIf="signatureTypeImg" />
+    </div>
+    </mat-tab>
+    <mat-tab label="Upload">
+      <div class="uploadSignatureSec">
+        <img style="width:150px" *ngIf="signatureTypeFile" [src]="signatureTypeFile" class="image">
+        <button mat-flat-button color="primary" class="uploadBtn" (click)="fileUpload.click()">
+          Upload
+        </button>
+        <input hidden type="file" #fileUpload (change)="uploadFileInput($event.target.files)"/>  
+      </div>  
+    </mat-tab>
+  </mat-tab-group>
+  <button (click)="closeDialog(dialog)">OK</button>
+</dialog>
+<ng-container *ngIf="esignatureBlock">
+  <zign-signer-block-popup [isCreateNewSignature]="false"
+    [fieldData]='fieldData' (closeEvent)="closeSignaturePop()"
+    (esignatureData)="updateSignatureField($event)">
+  </zign-signer-block-popup>
+</ng-container>

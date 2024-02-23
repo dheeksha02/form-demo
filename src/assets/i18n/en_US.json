@@ -1,0 +1,19 @@
+{
+	"MST_DEFAULT_INITIALS_MESSAGE": "By clicking on “Add”, I give my consent to securely save this initials for my later re-use.",
+	"MST_DEFAULT_SIGNTURE_MESSAGE": " By clicking on “Add”, I give my consent to securely save this eSignature for my later re-use.",
+	"MST_DEFAULT_STAMP_MESSAGE": " By clicking on “Add”, I give my consent to securely save this stamp for my later re-use.",
+	"MST_UPLOAD": "Upload",
+	"MST_DUPLICATE_NAME_ERR_MSG": "Signature with same name exists",
+	"MST_ADD_ESIGNATURE": "Add eSignature",
+	"MST_SAVED": "Saved",
+	"MST_Type": "Type",
+	"MST_DRAW": "Draw",
+	"MST_SAVE_SIGNATURE": "Save Signature",
+	"MST_CANCEL": "Cancel",
+	"MST_ADD": "Add",
+	"MST_TYPE": "Type",
+	"MST_Clear": "Clear",
+	"MST_UPLOAD_SIGN": "Upload Signature Image",
+	"MST_SIGNATURE_UPLOAD_FILE_TYPE_N_DIMENSION": "Accepted File Formats: GIF, JPG, PNG, BMP, JPEG. Max file size 200KB (Dimension: 750px X 100px)",
+	"MST_SAVED_SIGNATURE_COMMENTS": "By clicking on “Add”, I agree that this electronic signature can be used as a legally binding signature and as my paper signature equivalence"
+}

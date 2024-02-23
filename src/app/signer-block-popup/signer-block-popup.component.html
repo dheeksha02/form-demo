@@ -1,0 +1,445 @@
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Tangerine&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Caveat" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Allura" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Dancing Script" rel="stylesheet">
+
+<ng-template #signerBlockPopup>
+  <form [formGroup]="signatureBlock" class="h-100">
+    <ng-container *ngIf="isCreateNewSignature">
+      <mat-dialog-content>
+        <ng-container *ngTemplateOutlet="tabsTemplate; context: {signatureBlock: signatureBlock}">
+        </ng-container>
+      </mat-dialog-content>
+      <mat-dialog-actions>
+        <ng-container *ngTemplateOutlet="footerTemplate;">
+        </ng-container>
+      </mat-dialog-actions>
+    </ng-container>
+    <div *ngIf="!isCreateNewSignature" class="h-100 signature-panel d-flex flex-column"
+    [ngClass]="{ 'landscape' :deviceOrientation === 90 || deviceOrientation === 270 ,'portrait' : !(deviceOrientation === 90 || deviceOrientation === 270 ),'titleHeadMob':typeFocusInFlag} "
+    [style.height]="deviceHeight + 'px !important'">
+      <ng-container *ngTemplateOutlet="tabsTemplate; context: {signatureBlock: signatureBlock}">
+      </ng-container>
+      <ng-container *ngTemplateOutlet="footerTemplate">
+      </ng-container>
+    </div>
+  </form>
+</ng-template>
+
+<!-- <form [formGroup]="signatureBlock" class="h-100">
+  <dew-modal class="signature-block-popup" [title]="(headerLabel | translate)"
+    [isSmall]="'true'">
+    <dew-modal-body class="p-0 signature-block-popup-body">
+      <ng-container *ngTemplateOutlet="tabsTemplate; context: {signatureBlock: signatureBlock}">
+      </ng-container>
+    </dew-modal-body>
+    <dew-modal-footer class="align-content-between d-flex justify-content-around modal-footer p-0">
+      <ng-container *ngTemplateOutlet="footerTemplate;">
+      </ng-container>
+    </dew-modal-footer>
+  </dew-modal>
+  <div *ngIf="!isCreateNewSignature" class="h-100 signature-panel d-flex flex-column"
+    [ngClass]="{ 'landscape' :deviceOrientation === 90 || deviceOrientation === 270 ,'portrait' : !(deviceOrientation === 90 || deviceOrientation === 270 ),'titleHeadMob':typeFocusInFlag} "
+    [style.height]="deviceHeight + 'px !important'">
+    <ng-container *ngTemplateOutlet="tabsTemplate; context: {signatureBlock: signatureBlock}">
+    </ng-container>
+    <ng-container *ngTemplateOutlet="footerTemplate">
+    </ng-container>
+  </div>
+</form> -->
+
+ <ng-template #form let-form="form" let-type='type'>
+  <ng-container [formGroup]="form">
+    <div id="save-form-{{type}}" class="clearLeft" [ngClass]="{'py-3': isCreateNewSignature}">
+      <div class="w-50 mb-0 py-1 pb-2 d-none">
+        <div>{{(NameFieldLabel) | translate | titlecase}} <sup
+            class="important-field asterisk position-relative">*</sup>
+        </div>
+        <input type="text" id="focus-{{type}}" class="form-control" maxlength="230" formControlName="title"
+          aria-label="Title Texbox" (keyup)="duplicateNamePresent($event.target.value)" />
+        <span *ngIf="enterNameErrorType || enterNameErrorDraw || enterNameErrorupload"
+          class="text-danger text-11">{{'MST_Name_Error' | translate}}</span>
+        <span *ngIf="(duplicateNmTypeErr || duplicateNmDrawErr || duplicateNmUploadErr)"
+          class="text-danger text-11">{{'MST_DUPLICATE_NAME_ERR_MSG' | translate }}</span>
+      </div>
+      <!-- <dew-checkbox [propId]="type">
+      </dew-checkbox> -->
+      <mat-checkbox class="checkboxContainer mt-2" formControlName="defaultCheck"
+      (change)="defaultValueChange($event)">
+        {{ (defaultLabel  | translate) }}
+      </mat-checkbox>
+      <div *ngIf="(showDefaultDraw || showDefaultType || showDefaultUpload) ">
+        <div *ngIf="!isCreateNewSignature" style="font-size: 11px;" class="pt-2 pb-2 d-block">
+          <span role="status">
+            <ng-container [ngSwitch]="journeyFlag">
+              <ng-container *ngSwitchCase="'SIGNATURE'">
+                {{ 'MST_DEFAULT_SIGNTURE_MESSAGE' | translate}}
+              </ng-container>
+              <ng-container *ngSwitchCase="'STAMP'">
+                {{ 'MST_DEFAULT_STAMP_MESSAGE' | translate}}
+              </ng-container>
+              <ng-container *ngSwitchCase="'INITIAL'">
+                {{ 'MST_DEFAULT_INITIALS_MESSAGE' | translate}}
+              </ng-container>
+            </ng-container>
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+
+<ng-template #tabsTemplate let-signatureBlock="signatureBlock">
+  <ng-container [formGroup]="signatureBlock">
+    <ng-container *ngIf="!isCreateNewSignature">
+      <div class="titleHead header-height">
+        <ng-container [ngSwitch]="journeyFlag">
+          <ng-container *ngSwitchCase="'SIGNATURE'">
+            {{ 'MST_ADD_ESIGNATURE' | translate}}
+          </ng-container>
+          <ng-container *ngSwitchCase="'STAMP'">
+            {{ 'MST_ADD_STAMP' | translate}}
+          </ng-container>
+          <ng-container *ngSwitchCase="'INITIAL'">
+            {{ 'MST_ADD_INITALS' | translate}}
+          </ng-container>
+        </ng-container>
+      </div>
+    </ng-container>
+    <mat-tab-group [ngClass]="{'tabsetbg bg-white' : !isCreateNewSignature }"
+     class="main-content-height custom-flex-grow-1" (selectedTabChange)="tabChange($event)"
+     [selectedIndex]="0" #classificationWiz>
+      <mat-tab *ngIf="!isCreateNewSignature" class="pl-3 pr-3">
+        <ng-template mat-tab-label>
+          <span>{{ 'MST_SAVED' | translate | titlecase }}</span>
+        </ng-template>
+        <div class="m-0 tab-page-wrapper position-relative align-content-stretch">
+          <div [ngClass]="{'tabCont align-items-center' : !isCreateNewSignature }" formArrayName="savedSignature"
+            class="p-0 d-flex flex-wrap p-2 col-12 col-md-6 col-lg-4 col-xl-12"
+            *ngFor="let sign of savedSignature; let i = index">
+            <ng-container [formGroupName]="i">
+              <mat-card [ngClass]="{'w-100' : !isCreateNewSignature }"
+                [style.border]="sign.isChecked ? '1px solid #39a76b' : '1px solid #949494'">
+                <mat-card-header class="p-1">
+                  <div class="d-flex justify-content-end">
+                    <dew-checkbox formControlName="selectedImage" [isChecked]="sign.isChecked"
+                      (checkboxClickEvent)="onSavedSignSelect($event, i)" [propId]="'signature'+i">
+                    </dew-checkbox>
+                  </div>
+                </mat-card-header>
+                <mat-card-content [ngClass]="{'d-flex align-items-center' : !isCreateNewSignature }"
+                  class="signature-area">
+                 
+                  <ng-container
+                    *ngIf="(sign.type === 'IMAGE' || sign.type === 'UPLOAD' || sign.type === 'DRAW' || sign.type === 'FONT')">
+                    <img [src]="sign.img" class="sign-img m-auto" alt="'Signature image'" />
+                  </ng-container>
+                  <ng-template #TextContainer>
+                    <div [style.font-family]="sign?.cssFontStyle"
+                      [ngStyle]="{'font-size':  sign.signatureText.length < 17 ? '25px' : '15px' }"
+                      class="sign-img text-center m-auto"> {{ sign.signatureText }}</div>
+                  </ng-template>
+                
+                </mat-card-content>
+                <mat-card-footer class="border-top p-0">
+                  <div class="d-flex align-items-center justify-content-between p-2 w-100">
+                    <div style="width:80%">
+                      <div class="d-flex justify-content-between mb-0">
+                        <div class="d-flex justify-content-start" *ngIf="sign['edit']">
+                          <input formControlName="title" class="dew-input" type="text" [value]="sign.title"
+                            autocomplete="off" aria-label="Signature Title" tabindex="0"
+                            (blur)="setSignatureTitle($event, i)">
+                        </div>
+                        <input formControlName="id" class="dew-input" type="hidden" [value]="sign.title"
+                          aria-label="Signature id" tabindex="-1" (blur)="setSignatureTitle($event, i)"
+                          id="savedSignName-{{i}}">
+                        <div class="w-100">
+                          <div class="text-truncate" *ngIf="!sign['edit']">
+                            <span [title]="sign?.title" class="d-flex justify-content-start" class="text-13"
+                              tabindex="0" [ngStyle]="{'color': '#22252b'}">
+                              {{sign.title}} </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="width:20%" class="d-flex justify-content-end">
+                      <div *ngIf="!sign['edit']" id="editSavedSignName-{{i}}">
+                        <img src="/assets/images/Configure-Signature/edit.svg" class="mx-2 pointer"
+                          (click)="editSignatureTitle($event, i, sign)" alt="'edit-icon-for-signature'">
+                      </div>
+                      <div id="deleteSignature-{{i}}">
+                        <img src="/assets/images/Signer/delete-blue.svg"
+                          (click)="deleteSignatureAPIcall($event, i, sign)" alt="'delete-icon-for-signature'"
+                          class="pointer">
+                      </div>
+                    </div>
+                  </div>
+                </mat-card-footer>
+              </mat-card>
+            </ng-container>
+            
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab *ngIf="journeyFlag !== 'STAMP'" class="pl-3 pr-3"> 
+      <ng-template mat-tab-label>
+        <span>{{ 'MST_TYPE' | translate }}</span>
+      </ng-template>
+      <ng-container formGroupName="type">
+        <div class="m-0 tab-page-wrapper position-relative">
+          <div class="col-md-12" class="p-0 h-100">
+            <div class="Rectangle-9 w-100 position-relative">
+              <!-- <dew-select [defaultText]="fontDefaultText | translate" [data]="fontStyle" (selectedObject)="setFontStyle($event)"
+                [key]="'label'" [value]="'value'" formControlName="fontStyle" class="drop-down-styling" id="fontType">
+                <ng-template let-item="item">
+                  <div class="px-2 py-1 dropdown-item">
+                    <span class="signusername" [style.font-family]="item.value">{{userName}}</span>
+                    <div class="signfontstyle">{{item.id | translate}}</div>
+                  </div>
+                </ng-template>
+              </dew-select> -->
+              <mat-select class="drop-down-styling"
+                formControlName="fontStyle" id="fontType" (selectionChange)="setFontStyle($event)"> 
+                  <mat-select-trigger>{{ signatureBlock.controls.type.value.fontStyle }}</mat-select-trigger>
+                  <mat-option *ngFor="let item of fontStyle" [value]="item.value"(onSelectionChange)="test($event, item)"  multiLineOption>
+                    <div class="dropdown-item">
+                      <span class="signusername" [style.font-family]="item.value">
+                        {{ userName }}
+                      </span>
+                      <div class="signfontstyle">{{item.id | translate}}</div>
+                    </div>
+                  </mat-option>
+              </mat-select>
+              <!-- <mat-select [(ngModel)]="fontDefaultText" class="drop-down-styling" 
+                formControlName="fontStyle" id="fontType" (selectionChange)="setFontStyle($event)">
+                <div class="dropdown-item">
+                  <mat-option [value]="item.id" *ngFor="let item of fontStyle" (onSelectionChange)="test($event, item)">
+                    <span class="signusername" [style.font-family]="item.value">{{userName}}</span>
+                    <div class="signfontstyle">{{item.id | translate}}</div>
+                  </mat-option>
+                </div>
+              </mat-select> -->
+
+              <ng-container *ngIf="typeFocusInFlag"  >
+                <button mat-flat-button  id="uploadFromComputer1" (click)="typeFocusOut()" class="p-1 d-none typeLandDoneBtn typeDoneBtn">
+                  {{'MST_DONE' | translate}}
+                </button>
+              </ng-container>
+              <div class="d-flex justify-content-center">
+                <canvas class="xx" id='textCanvas' class="d-none" height="120"></canvas>
+                <input [class]="fontStyleValue" rows="1" (keyup)="onInitialChange($event)"
+                  (blur)="checkTypeField($event)" autocomplete="off" class="form-control text-area-styling"
+                  maxlength="100"  formControlName="signatureName" [style.font-family]="fontStyleValue"
+                  (focus)="typeFocusIn()" (focusout)="typeFocusOut()" id="signTextArea" aria-label="'Signature Text Area'" />
+              </div>
+            </div>
+            <div class="position-relative">
+              <div *ngIf="!isCreateNewSignature" class="pt-2">
+                <mat-checkbox
+                class="checkboxContainer"
+                formControlName="saveSignature"
+                [checked]="showDefaultType"
+                (change)="checkSaveSignature($event)"
+                > {{ saveCheckBoxLabel | translate }}
+                </mat-checkbox>
+              </div>
+              <ng-container *ngIf="showDefaultType || isCreateNewSignature">
+                <ng-container *ngTemplateOutlet="form; context: {form: signatureBlock.get('type'), type: 'type'}">
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </ng-container> 
+      </mat-tab>
+      <mat-tab *ngIf="journeyFlag !== 'STAMP'" class="pl-3 pr-3 d-block"
+      id="tab3">
+      <ng-template mat-tab-label>
+        <span>{{ 'MST_DRAW' | translate }}</span>
+      </ng-template>
+       <ng-container formGroupName="draw">
+        <div
+          class=" d-flex flex-column align-items-center justify-content-around  m-0 tab-page-wrapper position-relative">
+          <div class="p-0 h-100 col-12">
+            <div class="Rectangle-9 w-100" id="signaturePad">
+              <ng-signature-pad [emitOnDragEnd]="true" [clearButtonText]="('MST_Clear' | translate)"
+                [showDoneButton]="false" format="base64" [width]='drawTabCanvasWidth' [height]='137'
+                (done)="saveImage($event)" [showClearButton]="'true'" (cleared)="onClearedSignPad($event)">
+              </ng-signature-pad>
+            </div>
+            <div class="position-relative">
+              <div *ngIf="!isCreateNewSignature" class="pt-2">
+                <!-- <dew-checkbox class="checkboxContainer" formControlName="saveSignature"
+                  (changeState)="checkSaveSignature($event)" [display]=" saveCheckBoxLabel | translate"
+                  [propId]="'drawSignature'">
+                </dew-checkbox> -->
+                <mat-checkbox
+                class="checkboxContainer"
+                formControlName="saveSignature"
+                (change)="checkSaveSignature($event)"
+                > {{ saveCheckBoxLabel | translate }}
+                </mat-checkbox>
+              </div>
+              <ng-container *ngIf="showDefaultDraw || isCreateNewSignature">
+                <ng-container *ngTemplateOutlet="form; context: {form: signatureBlock.get('draw'), type: 'draw'}">
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      </mat-tab>
+      <mat-tab [isActive]="activeTabId === 'tab4'" class="pl-3 pr-3"  id="tab4">
+        <ng-template mat-tab-label>
+          <span>{{ 'MST_UPLOAD' | translate }}</span>
+        </ng-template>
+        <ng-container formGroupName="upload">
+          <div
+            class=" d-flex flex-column align-items-center justify-content-around  m-0 tab-page-wrapper position-relative">
+            <div class="col-md-12 p-0 h-100 w-100">
+              <div class="modalPop w-100 py-2 d-flex flex-column align-items-center justify-content-around">
+                <img class="sign-img"
+                  [src]="signatureBlockUploadIcon" alt="'Signature Upload Icon'">
+                <button mat-flat-button color="primary" class="my-2 uploadSignature" (click)="fileUpload.click()" id="uploadFromComputer">
+                  {{ journeyFlag === 'STAMP' ? ('MST_FROM_COMPUTER' | translate) : ('MST_UPLOAD_SIGN' | translate) }}
+                </button>
+            
+                <input id="fileInput" [accept]="acceptedFileTypes" name="file"
+                 hidden type="file" multiple #fileUpload (change)="fileSelected($event.target.files, journeyFlag)">
+                <!-- <md-button id="uploadButton" class="md-raised md-primary"> Choose Files </md-button> -->
+                <!-- <dew-file-upload [accept]="acceptedFileTypes" class="d-none" [totalFileSizeLimit]="200"
+                  (fileSelected)="fileSelected($event, journeyFlag)" [singleUpload]="'true'" #fileUpload>
+                </dew-file-upload> -->
+                <div *ngIf="unsupportedFileExtension" class="text-14 text-danger">
+                  {{'MST_FILE_FORMAT_NOT_SUPPORTED_SIGNATURE_UPLOAD' |
+                  translate}}</div>
+                <div *ngIf="unsupportedFileSizeErrMSG" class="text-14 text-danger">
+                  {{'MST_SIGNATURE_FILE_SIZE_ERROR_MSG' | translate}}</div>
+                <div *ngIf="dimensionErr" class="text-14 text-danger">{{'MST_SIGNATURE_FILE_DIMENSION_ERROR_MSG' |
+                  translate}}</div>
+                <input type="hidden" formControlName="uploadSignature" />
+                <div class="my-2 text-center">
+                  {{ journeyFlag === 'STAMP' ? ('MST_SIGNATURE_UPLOAD_FILE_TYPE' | translate) : ('MST_SIGNATURE_UPLOAD_FILE_TYPE_N_DIMENSION' | translate) }}
+                </div>
+              </div>
+              <div class="position-relative">
+                <div *ngIf="!isCreateNewSignature" class="pt-2">
+                <mat-checkbox
+                  class="checkboxContainer"
+                  formControlName="saveSignature"
+                  (change)="checkSaveSignature($event)">
+                  {{ (saveCheckBoxLabel | translate) }}
+                </mat-checkbox>
+                  <!-- <dew-checkbox class="checkboxContainer" formControlName="saveSignature"
+                    (changeState)="checkSaveSignature($event)" [display]=" (saveCheckBoxLabel | translate)"
+                    [propId]="'uploadSaveSignature'">
+                  </dew-checkbox> -->
+                </div>
+                <ng-container *ngIf="showDefaultUpload || isCreateNewSignature">
+                  <ng-container *ngTemplateOutlet="form; context: {form: signatureBlock.get('upload'), type: 'upload'}">
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-container>
+</ng-template>
+
+
+<ng-template #footerTemplate [formGroup]="applyToAll">
+  <div
+    [ngClass]="{'d-flex align-items-center w-100 justify-content-between' : isCreateNewSignature , 'customFooter': !isCreateNewSignature, 'd-none': !esignatureBlock}">
+    <div class="my-0 py-2 px-3 bg-white" [ngClass]="{'text-center': !isCreateNewSignature}">
+      <ng-container [ngSwitch]="journeyFlag">
+        <ng-container *ngSwitchCase="'SIGNATURE'">
+          <ng-container *ngIf="isApplyToAllField">
+            <div *ngIf="fieldData.fieldType !== 'DIGITAL_SIGNATURE' && applyAllFieldEnableFlag && applyToAllField?.applySignatureToAllFieldRequiredFlag" class="py-2 border-bottom border-top">
+              <mat-checkbox class="allfields" formControlName="applySignatureToAllField"
+                [isDisabled]="applyToAllField.applySignatureToAllField">
+                {{ 'MST_APPLY_THIS_SIGNATURE_AT_ALL_PLACES' | translate }}
+              </mat-checkbox>
+              <!-- <dew-checkbox
+                [propId]="'applySignatureToAllField'" ">
+              </dew-checkbox> -->
+            </div>
+          </ng-container>
+          <div class="pt-3 footer-msg">
+            {{ (isCreateNewSignature ? 'MST_MANAGE_SAVED_SIGNATURE_COMMENTS_MSG' : 'MST_SAVED_SIGNATURE_COMMENTS') | translate}}
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="'STAMP'">
+          <ng-container *ngIf="isApplyToAllField">
+            <div *ngIf="applyAllFieldEnableFlag && applyToAllField.applyStampToAllFieldRequiredFlag" class="py-2 border-bottom border-top">
+              <mat-checkbox class="allfields" formControlName="applyStampToAllField"
+              [isDisabled]="applyToAllField.applyStampToAllField">
+                {{ 'MST_APPLY_THIS_STAMP_AT_ALL_PLACES' | translate }}
+              </mat-checkbox>
+              <!-- <dew-checkbox 
+                [propId]="'applyStampToAllField'">
+              </dew-checkbox> -->
+            </div>
+          </ng-container>
+          <div class="pt-3">
+            {{ (isCreateNewSignature ? 'MST_MANAGE_SAVED_STAMP_COMMENTS_MSG' : 'MST_SAVED_STAMP_COMMENTS') | translate}}
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="'INITIAL'">
+          <ng-container *ngIf="isApplyToAllField">
+            <div *ngIf="applyAllFieldEnableFlag && applyToAllField?.applyInitialToAllFieldRequiredFlag" class="py-2 border-bottom border-top">
+              <mat-checkbox class="allfields" formControlName="applyInitialToAllField"
+              [isDisabled]="applyToAllField.applyInitialToAllField">
+                {{'MST_APPLY_THIS_INITIALS_AT_ALL_PLACES' | translate}}
+              </mat-checkbox>
+              <!-- <dew-checkbox 
+                [propId]="'applyInitialToAllField'">
+              </dew-checkbox> -->
+            </div>
+          </ng-container>
+          <div class="pt-3">
+            {{ (isCreateNewSignature ? 'MST_MANAGE_SAVED_INITALS_COMMENTS_MSG' : 'MST_SAVED_INITALS_COMMENTS' )| translate}}
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+    <div [ngClass]="{'d-flex justify-content-center py-2 bg-white': !isCreateNewSignature}" class="px-3">
+      
+      <button mat-flat-button  class="m-2 cancelBtn" (click)="closeSignturePopUp()" id="cancelSign">
+        {{'MST_CANCEL' | translate}}
+      </button>
+      <button mat-flat-button class="m-2 addBtn" color="primary" (click)="addESignature()" id="addSignature" [isDisabled]='disableAddBtn'>
+        {{ 'MST_ADD' | translate}}
+      </button>  
+    </div>
+  </div>
+</ng-template>
+
+
+<!-- <ng-container>
+  <dew-modal [shouldShow]="deleteSavedSignFlag" [noAdditionalHeader]="true" [isExtraSmall]="'true'" (whenClosed)="alertClosed()" class="deleteSign">
+    <dew-modal-body>
+      <div class="text-center py-2">
+        <img alt="error" src="/assets/images/common/error.svg">
+      </div>
+  
+      <div class="py-3 text-center" id="content_label_in_popup">
+        {{ 'MST_DELETE_SAVED_SIGNATURE_ERROR' | translate }}
+      </div>
+  
+      <div class="row py-2">
+        <dew-btn id="display-ok-ids" [display]="'MST_YES' | translate"  (click)="yesSelected()"
+          style="left: 35%;position: relative;">
+        </dew-btn>
+        <dew-btn id="display-ok-ids" [display]="'MST_NO' | translate"  (click)="alertClosed()"
+          style="left: 40%;position: relative;">
+        </dew-btn>
+      </div>
+    </dew-modal-body>
+  </dew-modal>
+</ng-container> -->

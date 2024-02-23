@@ -1,0 +1,67 @@
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header blue-bg text-white">
+            <mat-grid-list cols="4" rowHeight="40px">
+                <mat-grid-tile
+                    class="align-text-left"
+                    [colspan]="3"
+                    [rowspan]="1"
+                >
+                    <h4 class="mb-0">General Consent Form</h4>
+                </mat-grid-tile>
+                <mat-grid-tile
+                    class="align-text-right"
+                    [colspan]="1"
+                    [rowspan]="2"
+                >
+                    <button id="basic" type="button" mat-button
+                        (click)="downloadForm()"
+                    >
+                        <mat-icon>download</mat-icon>
+                    </button>
+                    <button mat-icon-button [matMenuTriggerFor]="menu" 
+                        aria-label="Example icon button with a horizontal three dot icon"
+                    >
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item *ngFor="let item of dropdownMenu"
+                            (click)="menuAction($event, item.param)"
+                        >
+                            {{ item.label }}
+                        </button>
+                    </mat-menu>
+                </mat-grid-tile>
+                <mat-grid-tile
+                    class="align-text-left"
+                    [colspan]="3"
+                    [rowspan]="1"
+                >
+                    <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </div>
+        <div class="card-body consent-form-body">
+            <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+                <mat-tab label="Patient Details">
+                    <formio [form]="{components: formSchema}" (submit)="onSubmit($event)"
+                    [options]="formConfig.options" (rateChange)="refreshForm.emit($event)" (change)="onChangeDesign($event)"></formio>
+                    <button mat-stroked-button class="mr-3 btn-cancel">Review</button>
+                    <button mat-stroked-button class="mr-3 btn-publish" (click)="saveForm()">
+                        Save
+                    </button>
+                </mat-tab>
+                <mat-tab label="Medical Data">Medical Data</mat-tab>
+              </mat-tab-group>
+        </div>
+    </div>
+    
+</div>
+
+<!-- snackbar -->
+<!-- <span class="example-pizza-party" matSnackBarLabel>
+    Pizza party!!!
+</span>
+<span matSnackBarActions>
+    <button mat-button matSnackBarAction (click)="dismissSnackBar()"><mat-icon>copyright</mat-icon></button>
+</span> -->

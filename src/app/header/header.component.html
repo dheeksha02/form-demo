@@ -1,0 +1,15 @@
+<div class="container-fluid bg-white sticky-top">
+    <div class="mw-1440 p-0 d-flex justify-content-center flex-column">
+        <div class="row ml-0 mr-0 d-flex justify-content-between align-items-center py-3 menuBar">
+          <div class="col-12 d-flex imgWrapper p-0">
+            <ng-container *ngTemplateOutlet="companyLogoRef"></ng-container>
+          </div>
+        </div>
+    </div>
+</div>
+<ng-template #companyLogoRef>
+    <div class="logo-container sticky-top">
+        <dew-icon icon="icon icon-arrow-left" size="10" color="grey" class="mr-3" (click)="backToForms()"></dew-icon>
+        <img class="logo-styling" src="../assets/images/certinal-header-logo-v1.svg" alt="'Certinal eSign'">
+    </div>
+</ng-template>

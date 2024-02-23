@@ -1,0 +1,22 @@
+<div class="form-builder-banner">
+  <span class="form-title" (click)="titleAccordian()" [style.display]="!dispTitleEdit ? 'block': 'none'">General Consent Form</span>
+  <input type="text" value="General Consent Form" [style.display]="dispTitleEdit ? 'block': 'none'">
+  <div class="row">
+    <div class="form-description">
+    General consent is an umbrella consent taken for conducting those patient care processes which do not pose any significant risk of harm to the patient. 
+    </div>
+    <div class="form-action-btn">
+        <button mat-stroked-button class="mr-3 btn-preview">
+            <i class="fa fa-eye" aria-hidden="true"></i>
+            Preview
+        </button>
+        <button mat-stroked-button class="mr-3 btn-cancel" (click)="cancel()">Cancel</button>
+        <button mat-stroked-button class="mr-3 btn-publish" (click)="onsubmitForm()">
+            Publish
+        </button>
+    </div>  
+  </div>
+</div>
+<form-builder [form]="form" (change)="onChangeDesign($event)" [options]="options"
+(submit)="onSubmit($event)"></form-builder>
+<!-- <button (click)="onSubmitForm()">Submit the form</button> -->

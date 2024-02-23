@@ -1,0 +1,39 @@
+@import "variables";
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+.blue-bg{
+    background-color: #004867 !important;
+}
+.mat-grid-tile {
+    &.align-text-left {
+        ::ng-deep figure {
+            justify-content: flex-start !important;
+        }
+    }
+    &.align-text-right {
+        ::ng-deep figure {
+            justify-content: flex-end !important;
+        }
+    }
+}
+.card-body{
+    &.consent-form-body{
+        padding-top: 0;
+    }
+}
+:host{
+    ::ng-deep{
+        .mat-tab-label-active{
+            .mat-tab-label-content{
+                color: #333 !important
+            }
+        }
+        .mat-tab-body-content{
+            overflow: hidden !important;
+        }
+        .mat-tab{
+            .mat-ink-bar{
+                background-color: red !important;
+            }
+        }
+    }
+}
